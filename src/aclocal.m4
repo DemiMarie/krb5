@@ -1,65 +1,65 @@
 AC_PREREQ(2.63)
-AC_COPYRIGHT([Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009
+AC_COPYRIGHT([[Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007, 2008, 2009
 Massachusetts Institute of Technology.
-])
+]])
 dnl
 define([K5_TOPDIR],[.])dnl
 dnl
-AC_DEFUN(V5_SET_TOPDIR,[dnl
-ac_reltopdir="K5_TOPDIR"
-if test ! -r "$srcdir/K5_TOPDIR/aclocal.m4"; then
-  AC_MSG_ERROR([Configure could not determine the relative topdir])
-fi
+AC_DEFUN([V5_SET_TOPDIR],[dnl
+[ac_reltopdir="]K5_TOPDIR["
+if test ! -r "$srcdir/]K5_TOPDIR[/aclocal.m4"; then
+  ]AC_MSG_ERROR([[Configure could not determine the relative topdir]])
+[fi
 ac_topdir=$srcdir/$ac_reltopdir
 ac_config_fragdir=$ac_reltopdir/config
 # echo "Looking for $srcdir/$ac_config_fragdir"
 if test -d "$srcdir/$ac_config_fragdir"; then
-  AC_CONFIG_AUX_DIR(K5_TOPDIR/config)
+  ]AC_CONFIG_AUX_DIR(m4_defn([K5_TOPDIR])[/config])[
 else
-  AC_MSG_ERROR([can not find config/ directory in $ac_reltopdir])
+  ]AC_MSG_ERROR([[can not find config/ directory in $ac_reltopdir]])[
 fi
-])dnl
+]])dnl
 dnl
 dnl Version info.
 dnl
-pushdef([x],esyscmd([sed -n 's/#define \([A-Z0-9_]*\)[ \t]*\(.*\)/\1=\2/p' < ]K5_TOPDIR/patchlevel.h))
-define([PL_KRB5_MAJOR_RELEASE],regexp(x,[KRB5_MAJOR_RELEASE=\(.*\)],[\1]))
+pushdef([x],esyscmd([sed -n 's/^#define \([A-Z0-9_]*\)[ \t][ \t]*\([1-9][0-9]*\|0\|"[^][\"]*"\)$/[[\1=\2]]/p' < ]K5_TOPDIR[/patchlevel.h]))
+define([PL_KRB5_MAJOR_RELEASE],regexp(x,[^KRB5_MAJOR_RELEASE=\([0-9][0-9]*\)$],[\1]))
 ifelse(PL_KRB5_MAJOR_RELEASE,,[errprint([Can't determine KRB5_MAJOR_RELEASE value from patchlevel.h.
 ]) m4exit(1) dnl sometimes that does not work?
 builtin(m4exit,1)])
-define([PL_KRB5_MINOR_RELEASE],regexp(x,[KRB5_MINOR_RELEASE=\(.*\)],[\1]))
+define([PL_KRB5_MINOR_RELEASE],regexp(x,[^KRB5_MINOR_RELEASE=\([0-9][0-9]*\)$],[\1]))
 ifelse(PL_KRB5_MINOR_RELEASE,,[errprint([Can't determine KRB5_MINOR_RELEASE value from patchlevel.h.
 ]) m4exit(1) dnl sometimes that does not work?
 builtin(m4exit,1)])
-define([PL_KRB5_PATCHLEVEL],regexp(x,[KRB5_PATCHLEVEL=\(.*\)],[\1]))
+define([PL_KRB5_PATCHLEVEL],regexp(x,[^KRB5_PATCHLEVEL=\([0-9][0-9]*\)$],[\1]))
 ifelse(PL_KRB5_PATCHLEVEL,,[errprint([Can't determine KRB5_PATCHLEVEL value from patchlevel.h.
-]) m4exit(1) dnl sometimes that does not work?
-builtin(m4exit,1)])
-define([PL_KRB5_RELTAIL],regexp(x,[KRB5_RELTAIL="\(.*\)"],[\1]))
+])m4exit(1)dnl sometimes that does not work?
+builtin([m4exit],1)])
+define([PL_KRB5_RELTAIL],regexp(x,[^KRB5_RELTAIL="\(.*\)"$],[\1]))
 dnl RELTAIL is allowed to not be defined.
 popdef([x])
-define([K5_VERSION],PL_KRB5_MAJOR_RELEASE.PL_KRB5_MINOR_RELEASE[]ifelse(PL_KRB5_PATCHLEVEL,0,,.PL_KRB5_PATCHLEVEL)ifelse(PL_KRB5_RELTAIL,,,-PL_KRB5_RELTAIL))
-define([K5_BUGADDR],krb5-bugs@mit.edu)
-define([K5_AC_INIT],[AC_INIT(Kerberos 5, K5_VERSION, K5_BUGADDR, krb5)
-AC_CONFIG_SRCDIR($1)
-build_dynobj=no])
+define([K5_VERSION],PL_KRB5_MAJOR_RELEASE.PL_KRB5_MINOR_RELEASE[]ifelse(PL_KRB5_PATCHLEVEL,0,,.PL_KRB5_PATCHLEVEL)ifelse(defn([PL_KRB5_RELTAIL]),,,-defn([PL_KRB5_RELTAIL])))
+define([K5_BUGADDR],[[krb5-bugs@mit.edu]])
+define([K5_AC_INIT],[AC_INIT([Kerberos 5], K5_VERSION, K5_BUGADDR, [krb5])
+AC_CONFIG_SRCDIR([$1])
+[build_dynobj=no]])
 dnl
 dnl drop in standard rules for all configure files -- CONFIG_RULES
 dnl
-AC_DEFUN(CONFIG_RULES,[dnl
+AC_DEFUN([CONFIG_RULES],[dnl
 AC_REQUIRE([V5_SET_TOPDIR]) dnl
-EXTRA_FILES=""
-AC_SUBST(EXTRA_FILES)
+[EXTRA_FILES=""]
+AC_SUBST([EXTRA_FILES])
 dnl Consider using AC_USE_SYSTEM_EXTENSIONS when we require autoconf
 dnl 2.59c or later, but be sure to test on Solaris first.
-AC_DEFINE([_GNU_SOURCE], 1, [Define to enable extensions in glibc])
-AC_DEFINE([__STDC_WANT_LIB_EXT1__], 1, [Define to enable C11 extensions])
+AC_DEFINE([[_GNU_SOURCE]], 1, [[Define to enable extensions in glibc]])
+AC_DEFINE([[__STDC_WANT_LIB_EXT1__]], 1, [[Define to enable C11 extensions]])
 
 WITH_CC dnl
 AC_REQUIRE_CPP
-if test -z "$LD" ; then LD=$CC; fi
-AC_ARG_VAR(LD,[linker command [CC]])
-AC_SUBST(LDFLAGS) dnl
+[if test -z "$LD" ; then LD=$CC; fi]
+AC_ARG_VAR([LD],[linker command [CC]])
+AC_SUBST([LDFLAGS]) dnl
 KRB5_AC_CHOOSE_ET dnl
 KRB5_AC_CHOOSE_SS dnl
 KRB5_AC_CHOOSE_DB dnl
@@ -74,18 +74,18 @@ dnl
 dnl This identifies the top of the source tree relative to the directory 
 dnl in which the configure file lives.
 dnl
-CONFIG_RELTOPDIR=$ac_reltopdir
-AC_SUBST(CONFIG_RELTOPDIR)
-lib_frag=$srcdir/$ac_config_fragdir/lib.in
-AC_SUBST_FILE(lib_frag)
-libobj_frag=$srcdir/$ac_config_fragdir/libobj.in
-AC_SUBST_FILE(libobj_frag)
-libnover_frag=$srcdir/$ac_config_fragdir/libnover.in
-AC_SUBST_FILE(libnover_frag)
-libpriv_frag=$srcdir/$ac_config_fragdir/libpriv.in
-AC_SUBST_FILE(libpriv_frag)
-libnodeps_frag=$srcdir/$ac_config_fragdir/libnodeps.in
-AC_SUBST_FILE(libnodeps_frag)
+[CONFIG_RELTOPDIR=$ac_reltopdir]
+AC_SUBST([CONFIG_RELTOPDIR])
+[lib_frag=$srcdir/$ac_config_fragdir/lib.in]
+AC_SUBST_FILE([lib_frag])
+[libobj_frag=$srcdir/$ac_config_fragdir/libobj.in]
+AC_SUBST_FILE([libobj_frag])
+[libnover_frag=$srcdir/$ac_config_fragdir/libnover.in]
+AC_SUBST_FILE([libnover_frag])
+[libpriv_frag=$srcdir/$ac_config_fragdir/libpriv.in]
+AC_SUBST_FILE([libpriv_frag])
+[libnodeps_frag=$srcdir/$ac_config_fragdir/libnodeps.in]
+AC_SUBST_FILE([libnodeps_frag])
 dnl
 KRB5_AC_PRAGMA_WEAK_REF
 WITH_LDAP
@@ -100,82 +100,86 @@ dnl want to use automake right now.
 AC_DEFUN([KRB5_AC_MAINTAINER_MODE],
 [AC_ARG_ENABLE([maintainer-mode],
 AC_HELP_STRING([--enable-maintainer-mode],[enable rebuilding of source files, Makefiles, etc]),
-USE_MAINTAINER_MODE=$enableval,
-USE_MAINTAINER_MODE=no)
+[[USE_MAINTAINER_MODE=$enableval]],
+[[USE_MAINTAINER_MODE=no]])[
 if test "$USE_MAINTAINER_MODE" = yes; then
   MAINTAINER_MODE_TRUE=
   MAINTAINER_MODE_FALSE='#'
-  AC_MSG_NOTICE(enabling maintainer mode)
+  ]AC_MSG_NOTICE([[enabling maintainer mode]])[
 else
   MAINTAINER_MODE_TRUE='#'
   MAINTAINER_MODE_FALSE=
 fi
 MAINT=$MAINTAINER_MODE_TRUE
-AC_SUBST(MAINTAINER_MODE_TRUE)
-AC_SUBST(MAINTAINER_MODE_FALSE)
-AC_SUBST(MAINT)
+]AC_SUBST([MAINTAINER_MODE_TRUE])
+AC_SUBST([MAINTAINER_MODE_FALSE])
+AC_SUBST([MAINT])
 ])
 
 dnl
 AC_DEFUN([KRB5_AC_INITFINI],[
 dnl Do we want initialization at load time?
 AC_ARG_ENABLE([delayed-initialization],
-AC_HELP_STRING([--disable-delayed-initialization],initialize library code when loaded @<:@delay until first use@:>@), , enable_delayed_initialization=yes)
+AC_HELP_STRING([--disable-delayed-initialization],
+               [initialize library code when loaded @<:@delay until first use@:>@]), ,
+               [[enable_delayed_initialization=yes]])[
 case "$enable_delayed_initialization" in
   yes)
-    AC_DEFINE(DELAY_INITIALIZER,1,[Define if library initialization should be delayed until first use]) ;;
+    ]AC_DEFINE([[DELAY_INITIALIZER]],1,[[Define if library initialization should be delayed until first use]])[ ;;
   no) ;;
-  *)  AC_MSG_ERROR(invalid option $enable_delayed_initialization for delayed-initialization) ;;
-esac
+  *)  ]AC_MSG_ERROR([[invalid option $enable_delayed_initialization for delayed-initialization]])[ ;;
+esac]
 dnl We always want finalization at unload time.
 dnl
 dnl Can we do things through gcc?
 KRB5_AC_GCC_ATTRS
 dnl How about with the linker?
-if test -z "$use_linker_init_option" ; then
-  AC_MSG_ERROR(ran INITFINI before checking shlib.conf?)
+[if test -z "$use_linker_init_option" ; then
+  ]AC_MSG_ERROR([[ran INITFINI before checking shlib.conf?]])[
 fi
 if test "$use_linker_init_option" = yes; then
-  AC_DEFINE(USE_LINKER_INIT_OPTION,1,[Define if link-time options for library initialization will be used])
+  ]AC_DEFINE([[USE_LINKER_INIT_OPTION]],1,[[Define if link-time options for library initialization will be used]])[
 fi
 if test "$use_linker_fini_option" = yes; then
-  AC_DEFINE(USE_LINKER_FINI_OPTION,1,[Define if link-time options for library finalization will be used])
+  ]AC_DEFINE([[USE_LINKER_FINI_OPTION]],1,[[Define if link-time options for library finalization will be used]])[
 fi
-])
+]])
 
-dnl find dlopen
-AC_DEFUN([KRB5_AC_FIND_DLOPEN],[
+# find dlopen
+AC_DEFUN([KRB5_AC_FIND_DLOPEN],[[
 old_LIBS="$LIBS"
 DL_LIB=
-AC_SEARCH_LIBS(dlopen, dl, [
+]AC_SEARCH_LIBS([dlopen], [dl], [[
 if test "$ac_cv_search_dlopen" != "none required"; then
   DL_LIB=$ac_cv_search_dlopen
 fi
 LIBS="$old_LIBS"
-AC_DEFINE(USE_DLOPEN,1,[Define if dlopen should be used])])
-AC_SUBST(DL_LIB)
+]AC_DEFINE([[USE_DLOPEN]],1,[[Define if dlopen should be used]])])
+AC_SUBST([DL_LIB])
 ])
 
 
-dnl Hack for now.
+# Hack for now.
 AC_DEFUN([KRB5_AC_ENABLE_THREADS],[
 AC_ARG_ENABLE([thread-support],
-AC_HELP_STRING([--disable-thread-support],don't enable thread support @<:@enabled@:>@), , enable_thread_support=yes)
+AC_HELP_STRING([--disable-thread-support],
+               [don't enable thread support @<:@enabled@:>@]),,
+               [[enable_thread_support=yes]])[
 if test "$enable_thread_support" = yes ; then
-  AC_MSG_NOTICE(enabling thread support)
-  AC_DEFINE(ENABLE_THREADS,1,[Define if thread support enabled])
-fi
+  ]AC_MSG_NOTICE([[enabling thread support]])
+  AC_DEFINE([[ENABLE_THREADS]],1,[Define if thread support enabled])[
+fi]
 dnl Maybe this should be inside the conditional above?  Doesn't cache....
-if test "$enable_thread_support" = yes; then
-  AX_PTHREAD(,[AC_MSG_ERROR([cannot determine options for enabling thread support; try --disable-thread-support])])
-  AC_MSG_NOTICE(PTHREAD_CC = $PTHREAD_CC)
-  AC_MSG_NOTICE(PTHREAD_CFLAGS = $PTHREAD_CFLAGS)
-  AC_MSG_NOTICE(PTHREAD_LIBS = $PTHREAD_LIBS)
+[if test "$enable_thread_support" = yes; then
+  ]AX_PTHREAD(,[AC_MSG_ERROR([[cannot determine options for enabling thread support; try --disable-thread-support]])])
+  AC_MSG_NOTICE([[PTHREAD_CC = $PTHREAD_CC]])
+  AC_MSG_NOTICE([[PTHREAD_CFLAGS = $PTHREAD_CFLAGS]])
+  AC_MSG_NOTICE([[PTHREAD_LIBS = $PTHREAD_LIBS]])
   dnl Not really needed -- if pthread.h isn't found, ACX_PTHREAD will fail.
   dnl AC_CHECK_HEADERS(pthread.h)
   # AIX and Tru64 don't support weak references, and don't have
   # stub versions of the pthread code in libc.
-  case "${host_os}" in
+  [case "${host_os}" in
     aix* | osf*)
       # On these platforms, we'll always pull in the thread support.
       LIBS="$LIBS $PTHREAD_LIBS"
@@ -190,7 +194,7 @@ if test "$enable_thread_support" = yes; then
       # don't exclude CFLAGS when linking.  *sigh*
       PTHREAD_CFLAGS="-D_REENTRANT -D_THREAD_SAFE -D_POSIX_C_SOURCE=199506L"
       ;;
-    solaris2.[[1-9]])
+    solaris2.[1-9])
       # On Solaris 10 with gcc 3.4.3, the autoconf archive macro doesn't
       # get the right result.   XXX What about Solaris 9 and earlier?
       if test "$GCC" = yes ; then
@@ -204,7 +208,7 @@ if test "$enable_thread_support" = yes; then
         PTHREAD_CFLAGS="-D_REENTRANT -pthreads"
       fi
       # On Solaris 10, the thread support is always available in libc.
-      AC_DEFINE(NO_WEAK_PTHREADS,1,[Define if references to pthread routines should be non-weak.])
+      ]AC_DEFINE([[NO_WEAK_PTHREADS]],1,[[Define if references to pthread routines should be non-weak.]])[
       ;;
   esac
   THREAD_SUPPORT=1
@@ -214,51 +218,51 @@ else
   PTHREAD_LIBS=""
   THREAD_SUPPORT=0
 fi
-AC_SUBST(THREAD_SUPPORT)
+]AC_SUBST([THREAD_SUPPORT])
 dnl We want to know where these routines live, so on systems with weak
 dnl reference support we can figure out whether or not the pthread library
 dnl has been linked in.
 dnl If we don't add any libraries for thread support, don't bother.
-AC_CHECK_FUNCS(pthread_once pthread_rwlock_init)
+AC_CHECK_FUNCS([[pthread_once pthread_rwlock_init]])[
 old_CC="$CC"
 test "$PTHREAD_CC" != "" && test "$ac_cv_c_compiler_gnu" = no && CC=$PTHREAD_CC
 old_CFLAGS="$CFLAGS"
 # On Solaris, -pthreads is added to CFLAGS, no extra explicit libraries.
 CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-AC_SUBST(PTHREAD_CFLAGS)
+]AC_SUBST([PTHREAD_CFLAGS])[
 old_LIBS="$LIBS"
 LIBS="$PTHREAD_LIBS $LIBS"
-AC_MSG_NOTICE(rechecking with PTHREAD_... options)
-AC_CHECK_LIB(c, pthread_rwlock_init,
-  [AC_DEFINE(HAVE_PTHREAD_RWLOCK_INIT_IN_THREAD_LIB,1,[Define if pthread_rwlock_init is provided in the thread library.])])
+]AC_MSG_NOTICE([[rechecking with PTHREAD_... options]])
+AC_CHECK_LIB([[c]], [[pthread_rwlock_init]],
+  [AC_DEFINE([[HAVE_PTHREAD_RWLOCK_INIT_IN_THREAD_LIB]],1,[[Define if pthread_rwlock_init is provided in the thread library.]])])[
 LIBS="$old_LIBS"
 CC="$old_CC"
 CFLAGS="$old_CFLAGS"
-])
+]])
 
 dnl This is somewhat gross and should go away when the build system
 dnl is revamped. -- tlyu
 dnl DECLARE_SYS_ERRLIST - check for sys_errlist in libc
 dnl
 AC_DEFUN([DECLARE_SYS_ERRLIST],
-[AC_CACHE_CHECK([for sys_errlist declaration], krb5_cv_decl_sys_errlist,
+[AC_CACHE_CHECK([[for sys_errlist declaration]], [[krb5_cv_decl_sys_errlist]],
 [AC_TRY_COMPILE([#include <stdio.h>
 #include <errno.h>], [1+sys_nerr;],
-krb5_cv_decl_sys_errlist=yes, krb5_cv_decl_sys_errlist=no)])
+[krb5_cv_decl_sys_errlist=yes], [krb5_cv_decl_sys_errlist=no])])
 # assume sys_nerr won't be declared w/o being in libc
-if test $krb5_cv_decl_sys_errlist = yes; then
-  AC_DEFINE(SYS_ERRLIST_DECLARED,1,[Define if sys_errlist is defined in errno.h])
-  AC_DEFINE(HAVE_SYS_ERRLIST,1,[Define if sys_errlist in libc])
-else
+[if test $krb5_cv_decl_sys_errlist = yes; then]
+  AC_DEFINE([[SYS_ERRLIST_DECLARED]],1,[[Define if sys_errlist is defined in errno.h]])
+  AC_DEFINE([[HAVE_SYS_ERRLIST]],1,[[Define if sys_errlist in libc]])
+[else]
   # This means that sys_errlist is not declared in errno.h, but may still
   # be in libc.
-  AC_CACHE_CHECK([for sys_errlist in libc], krb5_cv_var_sys_errlist,
+  AC_CACHE_CHECK([[for sys_errlist in libc]], [[krb5_cv_var_sys_errlist]],
   [AC_TRY_LINK([extern int sys_nerr;], [if (1+sys_nerr < 0) return 1;],
   krb5_cv_var_sys_errlist=yes, krb5_cv_var_sys_errlist=no;)])
   if test $krb5_cv_var_sys_errlist = yes; then
-    AC_DEFINE(HAVE_SYS_ERRLIST,1,[Define if sys_errlist in libc])
+    AC_DEFINE([[HAVE_SYS_ERRLIST]],1,[Define if sys_errlist in libc])
     # Do this cruft for backwards compatibility for now.
-    AC_DEFINE(NEED_SYS_ERRLIST,1,[Define if need to declare sys_errlist])
+    AC_DEFINE([[NEED_SYS_ERRLIST]],1,[Define if need to declare sys_errlist])
   else
     AC_MSG_WARN([sys_errlist is neither in errno.h nor in libc])
   fi
@@ -276,7 +280,7 @@ AC_TRY_LINK([#include <signal.h>], [sigmask(1);],
  krb5_cv_func_sigprocmask_use=no, krb5_cv_func_sigprocmask_use=yes))])
 AC_MSG_RESULT($krb5_cv_func_sigprocmask_use)
 if test $krb5_cv_func_sigprocmask_use = yes; then
- AC_DEFINE(USE_SIGPROCMASK,1,[Define if sigprocmask should be used])
+ AC_DEFINE([[USE_SIGPROCMASK]],1,[Define if sigprocmask should be used])
 fi
 ])dnl
 dnl
@@ -285,7 +289,7 @@ dnl check for <dirent.h> -- CHECK_DIRENT
 dnl (may need to be more complex later)
 dnl
 AC_DEFUN(CHECK_DIRENT,[
-AC_CHECK_HEADER(dirent.h,AC_DEFINE(USE_DIRENT_H,1,[Define if you have dirent.h functionality]))])dnl
+AC_CHECK_HEADER(dirent.h,AC_DEFINE([[USE_DIRENT_H]],1,[Define if you have dirent.h functionality]))])dnl
 dnl
 dnl check if union wait is defined, or if WAIT_USES_INT -- CHECK_WAIT_TYPE
 dnl
@@ -306,7 +310,7 @@ dnl Else fallback on old stuff
 	krb5_cv_struct_wait=yes, krb5_cv_struct_wait=no)])])
 AC_MSG_RESULT($krb5_cv_struct_wait)
 if test $krb5_cv_struct_wait = no; then
-	AC_DEFINE(WAIT_USES_INT,1,[Define if wait takes int as a argument])
+	AC_DEFINE([[WAIT_USES_INT]],1,[Define if wait takes int as a argument])
 fi
 ])dnl
 dnl
@@ -322,7 +326,7 @@ AC_CACHE_VAL(krb5_cv_type_sigset_t,
 krb5_cv_type_sigset_t=yes, krb5_cv_type_sigset_t=no)])
 AC_MSG_RESULT($krb5_cv_type_sigset_t)
 if test $krb5_cv_type_sigset_t = yes; then
-  AC_DEFINE(POSIX_SIGNALS,1,[Define if POSIX signal handling is used])
+  AC_DEFINE([[POSIX_SIGNALS]],1,[Define if POSIX signal handling is used])
 fi
 )])dnl
 dnl
@@ -343,7 +347,7 @@ krb5_cv_has_posix_signals=yes, krb5_cv_has_posix_signals=no)])
 AC_MSG_RESULT($krb5_cv_has_posix_signals)
 if test $krb5_cv_has_posix_signals = yes; then
    stype=void
-   AC_DEFINE(POSIX_SIGTYPE, 1, [Define if POSIX signal handlers are used])
+   AC_DEFINE([[POSIX_SIGTYPE]], 1, [Define if POSIX signal handlers are used])
 else
   if test $ac_cv_type_signal = void; then
      stype=void
@@ -365,7 +369,7 @@ AC_CACHE_VAL(krb5_cv_struct_sigjmp_buf,
 krb5_cv_struct_sigjmp_buf=yes,krb5_cv_struct_sigjmp_buf=no)])
 AC_MSG_RESULT($krb5_cv_struct_sigjmp_buf)
 if test $krb5_cv_struct_sigjmp_buf = yes; then
-  AC_DEFINE(POSIX_SETJMP,1,[Define if setjmp indicates POSIX interface])
+  AC_DEFINE([[POSIX_SETJMP]],1,[Define if setjmp indicates POSIX interface])
 fi
 )])dnl
 dnl
@@ -387,7 +391,7 @@ getaddrinfo("kerberos.mit.edu", "echo", 0, &ai);
 ], ac_cv_func_getaddrinfo=yes, ac_cv_func_getaddrinfo=no)])
 AC_MSG_RESULT($ac_cv_func_getaddrinfo)
 if test $ac_cv_func_getaddrinfo = yes; then
-  AC_DEFINE(HAVE_GETADDRINFO,1,[Define if you have the getaddrinfo function])
+  AC_DEFINE([[HAVE_GETADDRINFO]],1,[Define if you have the getaddrinfo function])
 fi
 dnl
 AC_REQUIRE([KRB5_SOCKADDR_SA_LEN])dnl
@@ -432,7 +436,7 @@ AC_MSG_RESULT($krb5_cv_inet6_with_dinet6)
 fi
 if test $krb5_cv_inet6 = yes || test "$krb5_cv_inet6_with_dinet6" = yes; then
   if test "$krb5_cv_inet6_with_dinet6" = yes; then
-    AC_DEFINE(INET6,1,[May need to be defined to enable IPv6 support, for example on IRIX])
+    AC_DEFINE([[INET6]],1,[May need to be defined to enable IPv6 support, for example on IRIX])
   fi
 fi
 ])dnl
@@ -455,7 +459,7 @@ AC_DEFUN(TRY_WARN_CC_FLAG_1,[dnl
      CFLAGS="$CFLAGS $cflags_warning_test_flags $1"
      AC_TRY_COMPILE([], 1;, eval $cachevar=yes, eval $cachevar=no)
      CFLAGS="$old_cflags"],
-    [AC_MSG_ERROR(compiling simple test program with $CFLAGS failed)])])
+    [AC_MSG_ERROR([[compiling simple test program with $CFLAGS failed]])])])
   if eval test '"${'$cachevar'}"' = yes; then
     WARN_CFLAGS="$WARN_CFLAGS $1"
   fi
@@ -485,7 +489,7 @@ if test $ac_cv_c_compiler_gnu = yes ; then
      HAVE_GCC=yes
      else HAVE_GCC=
 fi
-AC_SUBST(HAVE_GCC)
+AC_SUBST([HAVE_GCC])
 AC_CACHE_CHECK([for GNU linker], krb5_cv_prog_gnu_ld,
 [krb5_cv_prog_gnu_ld=no
 if test "$GCC" = yes; then
@@ -500,7 +504,7 @@ AC_ARG_WITH([size-optimizations],
 ,
 withval=no)
 if test "$withval" = yes; then
-  AC_DEFINE(CONFIG_SMALL,1,[Define to reduce code size even if it means more cpu usage])
+  AC_DEFINE([[CONFIG_SMALL]],1,[Define to reduce code size even if it means more cpu usage])
 fi
 # -Wno-long-long, if needed, for k5-platform.h without inttypes.h etc.
 extra_gcc_warn_opts="-Wall -Wcast-align -Wshadow"
@@ -508,7 +512,7 @@ extra_gcc_warn_opts="-Wall -Wcast-align -Wshadow"
 if test "$GCC" = yes ; then
   # Putting this here means we get -Os after -O2, which works.
   if test "$with_size_optimizations" = yes && test "x$krb5_ac_cflags_set" != xset; then
-    AC_MSG_NOTICE(adding -Os optimization option)
+    AC_MSG_NOTICE([[adding -Os optimization option]])
     case "$CFLAGS" in
       "-g -O2") CFLAGS="-g -Os" ;;
       "-O2")    CFLAGS="-Os" ;;
@@ -516,22 +520,22 @@ if test "$GCC" = yes ; then
     esac
   fi
   if test "x$krb5_ac_warn_cflags_set" = xset ; then
-    AC_MSG_NOTICE(not adding extra gcc warning flags because WARN_CFLAGS was set)
+    AC_MSG_NOTICE([[not adding extra gcc warning flags because WARN_CFLAGS was set]])
   else
-    AC_MSG_NOTICE(adding extra warning flags for gcc)
+    AC_MSG_NOTICE([[adding extra warning flags for gcc]])
     WARN_CFLAGS="$WARN_CFLAGS $extra_gcc_warn_opts -Wmissing-prototypes"
     if test "`uname -s`" = Darwin ; then
-      AC_MSG_NOTICE(skipping pedantic warnings on Darwin)
+      AC_MSG_NOTICE([[skipping pedantic warnings on Darwin]])
     elif test "`uname -s`" = Linux ; then
-      AC_MSG_NOTICE(skipping pedantic warnings on Linux)
+      AC_MSG_NOTICE([[skipping pedantic warnings on Linux]])
     else
       WARN_CFLAGS="$WARN_CFLAGS -pedantic"
     fi
     if test "$ac_cv_cxx_compiler_gnu" = yes; then
       if test "x$krb5_ac_warn_cxxflags_set" = xset ; then
-        AC_MSG_NOTICE(not adding extra g++ warnings because WARN_CXXFLAGS was set)
+        AC_MSG_NOTICE([[not adding extra g++ warnings because WARN_CXXFLAGS was set]])
       else
-        AC_MSG_NOTICE(adding extra warning flags for g++)
+        AC_MSG_NOTICE([[adding extra warning flags for g++]])
         WARN_CXXFLAGS="$WARN_CXXFLAGS $extra_gcc_warn_opts"
       fi
     fi
@@ -585,7 +589,7 @@ if test "$GCC" = yes ; then
     *-fcommon*) ;; # why someone would do this, I don't know
     *-fno-common*) ;; # okay, they're already doing the right thing
     *)
-      AC_MSG_NOTICE(disabling the use of common storage on Darwin)
+      AC_MSG_NOTICE([[disabling the use of common storage on Darwin]])
       CFLAGS="$CFLAGS -fno-common"
       ;;
     esac
@@ -604,7 +608,7 @@ else
       *-qhalt=*) ;;
       *)
 	CFLAGS="$CFLAGS -qhalt=e"
-	AC_MSG_NOTICE(adding -qhalt=e for better error reporting)
+	AC_MSG_NOTICE([[adding -qhalt=e for better error reporting]])
 	;;
     esac
     # Also, the optimizer isn't turned on by default, which means
@@ -615,7 +619,7 @@ else
       *-O*) ;;
       *)
 	CFLAGS="$CFLAGS -O"
-	AC_MSG_NOTICE(adding -O for inline thread-support function elimination)
+	AC_MSG_NOTICE([[adding -O for inline thread-support function elimination]])
 	;;
     esac
   fi
@@ -627,19 +631,19 @@ else
     # be issued.
     # -v -fd -errwarn=E_DECLARATION_IN_CODE ...
     if test "x$krb5_ac_warn_cflags_set" = xset ; then
-      AC_MSG_NOTICE(not adding extra warning flags because WARN_CFLAGS was set)
+      AC_MSG_NOTICE([[not adding extra warning flags because WARN_CFLAGS was set]])
     else
       WARN_CFLAGS="-errtags=yes -errwarn=E_BAD_PTR_INT_COMBINATION,E_BAD_PTR_INT_COMB_ARG,E_PTR_TO_VOID_IN_ARITHMETIC,E_NO_IMPLICIT_DECL_ALLOWED,E_ATTRIBUTE_PARAM_UNDEFINED"
     fi
     if test "x$krb5_ac_warn_cxxflags_set" = xset ; then
-      AC_MSG_NOTICE(not adding extra warning flags because WARN_CXXFLAGS was set)
+      AC_MSG_NOTICE([[not adding extra warning flags because WARN_CXXFLAGS was set]])
     else
       WARN_CXXFLAGS="-errtags=yes +w +w2 -xport64"
     fi
   fi
 fi
-AC_SUBST(WARN_CFLAGS)
-AC_SUBST(WARN_CXXFLAGS)
+AC_SUBST([WARN_CFLAGS])
+AC_SUBST([WARN_CXXFLAGS])
 ])dnl
 dnl
 dnl
@@ -660,7 +664,7 @@ AC_CACHE_VAL(krb5_cv_type_yylineno,
   rm -f conftest.out)
   AC_MSG_RESULT($krb5_cv_type_yylineno)
   if test $krb5_cv_type_yylineno = no; then
-	AC_DEFINE(NO_YYLINENO, 1, [Define if lex produes code with yylineno])
+	AC_DEFINE([[NO_YYLINENO]], 1, [Define if lex produes code with yylineno])
   fi
 ])dnl
 dnl
@@ -705,7 +709,7 @@ dnl component
 dnl
 AC_DEFUN([KRB5_SOCKADDR_SA_LEN],[ dnl
 AC_CHECK_MEMBER(struct sockaddr.sa_len,
-  AC_DEFINE(HAVE_SA_LEN,1,[Define if struct sockaddr contains sa_len])
+  AC_DEFINE([[HAVE_SA_LEN]],1,[Define if struct sockaddr contains sa_len])
 ,,[#include <sys/types.h>
 #include <sys/socket.h>])])
 dnl
@@ -748,9 +752,9 @@ AC_TRY_RUN([
 #include <regex.h>
 regex_t x; regmatch_t m;
 int main() { return regcomp(&x,"pat.*",0) || regexec(&x,"pattern",1,&m,0); }
-], ac_cv_func_regcomp=yes, ac_cv_func_regcomp=no, AC_MSG_ERROR([Cannot test regcomp when cross compiling]))])
+], ac_cv_func_regcomp=yes, ac_cv_func_regcomp=no, AC_MSG_ERROR([[Cannot test regcomp when cross compiling]]))])
 AC_MSG_RESULT($ac_cv_func_regcomp)
-test $ac_cv_func_regcomp = yes && AC_DEFINE(HAVE_REGCOMP,1,[Define if regcomp exists and functions])
+test $ac_cv_func_regcomp = yes && AC_DEFINE([[HAVE_REGCOMP]],1,[Define if regcomp exists and functions])
 dnl
 dnl Check for the compile and step functions - only if regcomp is not available
 dnl
@@ -765,7 +769,7 @@ dnl
 dnl Set GEN_LIB if necessary 
 dnl
  AC_CHECK_LIB(gen, compile, GEN_LIB=-lgen, GEN_LIB=)
- AC_SUBST(GEN_LIB)
+ AC_SUBST([GEN_LIB])
 fi
 ])
 dnl
@@ -872,9 +876,9 @@ if test -n "$tcl_ok_conf" ; then
     TCL_MAYBE_RPATH=
   fi
   CPPFLAGS="$old_CPPFLAGS $TCL_INCLUDES"
-  AC_CHECK_HEADER(tcl.h,AC_DEFINE(HAVE_TCL_H,1,[Define if tcl.h is available]) tcl_header=yes)
+  AC_CHECK_HEADER(tcl.h,AC_DEFINE([[HAVE_TCL_H]],1,[Define if tcl.h is available]) tcl_header=yes)
   if test $tcl_header=no; then
-     AC_CHECK_HEADER(tcl/tcl.h,AC_DEFINE(HAVE_TCL_TCL_H,1,[Define if tcl/tcl.h is available]) tcl_header=yes)
+     AC_CHECK_HEADER(tcl/tcl.h,AC_DEFINE([[HAVE_TCL_TCL_H]],1,[Define if tcl/tcl.h is available]) tcl_header=yes)
   fi
   CPPFLAGS="$old_CPPFLAGS"
   tcl_lib=yes
@@ -882,11 +886,11 @@ else
   # If we read a tclConfig.sh file, it probably set this.
   TCL_LIBS=
 fi  
-AC_SUBST(TCL_INCLUDES)
-AC_SUBST(TCL_LIBS)
-AC_SUBST(TCL_LIBPATH)
-AC_SUBST(TCL_RPATH)
-AC_SUBST(TCL_MAYBE_RPATH)
+AC_SUBST([TCL_INCLUDES])
+AC_SUBST([TCL_LIBS])
+AC_SUBST([TCL_LIBPATH])
+AC_SUBST([TCL_RPATH])
+AC_SUBST([TCL_MAYBE_RPATH])
 ])dnl
 dnl
 dnl AC_KRB5_TCL_TRYOLD
@@ -906,9 +910,9 @@ if test "$with_tcl" != no ; then
 	CPPFLAGS="$CPPFLAGS $TCL_INCLUDES"
 	LDFLAGS="$LDFLAGS $TCL_LIBPATH"
 	tcl_header=no
-	AC_CHECK_HEADER(tcl.h,AC_DEFINE(HAVE_TCL_H,1,[Define if tcl.h found]) tcl_header=yes)
+	AC_CHECK_HEADER(tcl.h,AC_DEFINE([[HAVE_TCL_H]],1,[Define if tcl.h found]) tcl_header=yes)
 	if test $tcl_header=no; then
-	   AC_CHECK_HEADER(tcl/tcl.h,AC_DEFINE(HAVE_TCL_TCL_H,1,[Define if tcl/tcl.h found]) tcl_header=yes)
+	   AC_CHECK_HEADER(tcl/tcl.h,AC_DEFINE([[HAVE_TCL_TCL_H]],1,[Define if tcl/tcl.h found]) tcl_header=yes)
 	fi
 
 	if test $tcl_header = yes ; then
@@ -945,10 +949,10 @@ if test "$with_tcl" != no ; then
 	fi
 	CPPFLAGS="$krb5_save_CPPFLAGS"
 	LDFLAGS="$krb5_save_LDFLAGS"
-	AC_SUBST(TCL_INCLUDES)
-	AC_SUBST(TCL_LIBS)
-	AC_SUBST(TCL_LIBPATH)
-	AC_SUBST(TCL_RPATH)
+	AC_SUBST([TCL_INCLUDES])
+	AC_SUBST([TCL_LIBS])
+	AC_SUBST([TCL_LIBPATH])
+	AC_SUBST([TCL_RPATH])
 else
 	AC_MSG_RESULT("Not looking for Tcl library")
 fi
@@ -997,7 +1001,7 @@ fi
 # If "yes" or pathname, error out if not found.
 if test "$with_tcl" != no -a "$with_tcl" != try ; then
   if test "$tcl_header $tcl_lib" != "yes yes" ; then
-    AC_MSG_ERROR(Could not find Tcl)
+    AC_MSG_ERROR([[Could not find Tcl]])
   fi
 fi
 ])dnl
@@ -1020,8 +1024,8 @@ else
 	HESIOD_DEFS=
 	HESIOD_LIBS=
 fi
-AC_SUBST(HESIOD_DEFS)
-AC_SUBST(HESIOD_LIBS)])
+AC_SUBST([HESIOD_DEFS])
+AC_SUBST([HESIOD_LIBS])])
 
 
 dnl
@@ -1036,36 +1040,36 @@ AC_REQUIRE([AC_PROG_RANLIB])dnl
 AC_REQUIRE([AC_PROG_INSTALL])dnl
 AC_CHECK_TOOL(AR, ar, false)
 if test "$AR" = "false"; then
-  AC_MSG_ERROR([ar not found in PATH])
+  AC_MSG_ERROR([[ar not found in PATH]])
 fi
 AC_CHECK_PROG(PERL, perl, perl, false)
 if test "$ac_cv_prog_PERL" = "false"; then
-  AC_MSG_ERROR(Perl is now required for Kerberos builds.)
+  AC_MSG_ERROR([[Perl is now required for Kerberos builds.]])
 fi
-AC_SUBST(LIBLIST)
-AC_SUBST(LIBLINKS)
-AC_SUBST(PLUGIN)
-AC_SUBST(PLUGINLINK)
-AC_SUBST(PLUGININST)
-AC_SUBST(KDB5_PLUGIN_DEPLIBS)
-AC_SUBST(KDB5_PLUGIN_LIBS)
-AC_SUBST(MAKE_SHLIB_COMMAND)
-AC_SUBST(SHLIB_RPATH_FLAGS)
-AC_SUBST(SHLIB_EXPFLAGS)
-AC_SUBST(SHLIB_EXPORT_FILE_DEP)
-AC_SUBST(DYNOBJ_EXPDEPS)
-AC_SUBST(DYNOBJ_EXPFLAGS)
-AC_SUBST(INSTALL_SHLIB)
-AC_SUBST(STLIBEXT)
-AC_SUBST(SHLIBEXT)
-AC_SUBST(SHLIBVEXT)
-AC_SUBST(SHLIBSEXT)
-AC_SUBST(DEPLIBEXT)
-AC_SUBST(PFLIBEXT)
-AC_SUBST(LIBINSTLIST)
-AC_SUBST(DYNOBJEXT)
-AC_SUBST(MAKE_DYNOBJ_COMMAND)
-AC_SUBST(UNDEF_CHECK)
+AC_SUBST([LIBLIST])
+AC_SUBST([LIBLINKS])
+AC_SUBST([PLUGIN])
+AC_SUBST([PLUGINLINK])
+AC_SUBST([PLUGININST])
+AC_SUBST([KDB5_PLUGIN_DEPLIBS])
+AC_SUBST([KDB5_PLUGIN_LIBS])
+AC_SUBST([MAKE_SHLIB_COMMAND])
+AC_SUBST([SHLIB_RPATH_FLAGS])
+AC_SUBST([SHLIB_EXPFLAGS])
+AC_SUBST([SHLIB_EXPORT_FILE_DEP])
+AC_SUBST([DYNOBJ_EXPDEPS])
+AC_SUBST([DYNOBJ_EXPFLAGS])
+AC_SUBST([INSTALL_SHLIB])
+AC_SUBST([STLIBEXT])
+AC_SUBST([SHLIBEXT])
+AC_SUBST([SHLIBVEXT])
+AC_SUBST([SHLIBSEXT])
+AC_SUBST([DEPLIBEXT])
+AC_SUBST([PFLIBEXT])
+AC_SUBST([LIBINSTLIST])
+AC_SUBST([DYNOBJEXT])
+AC_SUBST([MAKE_DYNOBJ_COMMAND])
+AC_SUBST([UNDEF_CHECK])
 ])
 
 dnl
@@ -1075,12 +1079,12 @@ dnl Pull in the necessary stuff to build library objects.
 
 AC_DEFUN(KRB5_BUILD_LIBOBJS,
 [AC_REQUIRE([KRB5_LIB_AUX])dnl
-AC_SUBST(OBJLISTS)
-AC_SUBST(STOBJEXT)
-AC_SUBST(SHOBJEXT)
-AC_SUBST(PFOBJEXT)
-AC_SUBST(PICFLAGS)
-AC_SUBST(PROFFLAGS)])
+AC_SUBST([OBJLISTS])
+AC_SUBST([STOBJEXT])
+AC_SUBST([SHOBJEXT])
+AC_SUBST([PFOBJEXT])
+AC_SUBST([PICFLAGS])
+AC_SUBST([PROFFLAGS])])
 
 dnl
 dnl KRB5_BUILD_PROGRAM
@@ -1090,11 +1094,11 @@ dnl Set variables to build a program.
 AC_DEFUN(KRB5_BUILD_PROGRAM,
 [AC_REQUIRE([KRB5_LIB_AUX])dnl
 AC_REQUIRE([KRB5_AC_NEED_LIBGEN])dnl
-AC_SUBST(CC_LINK)
-AC_SUBST(CXX_LINK)
-AC_SUBST(RPATH_FLAG)
-AC_SUBST(PROG_RPATH_FLAGS)
-AC_SUBST(DEPLIBEXT)])
+AC_SUBST([CC_LINK])
+AC_SUBST([CXX_LINK])
+AC_SUBST([RPATH_FLAG])
+AC_SUBST([PROG_RPATH_FLAGS])
+AC_SUBST([DEPLIBEXT])])
 
 dnl
 dnl KRB5_RUN_FLAGS
@@ -1105,8 +1109,8 @@ AC_DEFUN(KRB5_RUN_FLAGS,
 [AC_REQUIRE([KRB5_LIB_AUX])dnl
 KRB5_RUN_ENV="$RUN_ENV"
 KRB5_RUN_VARS="$RUN_VARS"
-AC_SUBST(KRB5_RUN_ENV)
-AC_SUBST(KRB5_RUN_VARS)])
+AC_SUBST([KRB5_RUN_ENV])
+AC_SUBST([KRB5_RUN_VARS])])
 
 dnl
 dnl KRB5_LIB_AUX
@@ -1120,7 +1124,7 @@ AC_ARG_ENABLE([static],,, [enable_static=no])
 AC_ARG_ENABLE([shared],,, [enable_shared=yes])
 
 if test "x$enable_static" = "x$enable_shared"; then
-  AC_MSG_ERROR([--enable-static must be specified with --disable-shared])
+  AC_MSG_ERROR([[--enable-static must be specified with --disable-shared]])
 fi
 
 AC_ARG_ENABLE([rpath],
@@ -1135,13 +1139,13 @@ if test "x$enable_rpath" != xyes ; then
 fi
 
 if test "$SHLIBEXT" = ".so-nobuild"; then
-   AC_MSG_ERROR([Shared libraries are not yet supported on this platform.])
+   AC_MSG_ERROR([[Shared libraries are not yet supported on this platform.]])
 fi
 
 DEPLIBEXT=$SHLIBEXT
 
 if test "x$enable_static" = xyes; then
-	AC_MSG_NOTICE([using static libraries])
+	AC_MSG_NOTICE([[using static libraries]])
 	LIBLIST='lib$(LIBBASE)$(STLIBEXT)'
 	LIBLINKS='$(TOPLIBD)/lib$(LIBBASE)$(STLIBEXT)'
 	PLUGIN='libkrb5_$(LIBBASE)$(STLIBEXT)'
@@ -1150,7 +1154,7 @@ if test "x$enable_static" = xyes; then
 	OBJLISTS=OBJS.ST
 	LIBINSTLIST=install-static
 	DEPLIBEXT=$STLIBEXT
-	AC_DEFINE([STATIC_PLUGINS], 1, [Define for static plugin linkage])
+	AC_DEFINE([[STATIC_PLUGINS]], 1, [Define for static plugin linkage])
 
 	KDB5_PLUGIN_DEPLIBS='$(TOPLIBD)/libkrb5_db2$(DEPLIBEXT)'
 	KDB5_PLUGIN_LIBS='-lkrb5_db2'
@@ -1168,7 +1172,7 @@ if test "x$enable_static" = xyes; then
 	SHLIBVEXT=.so.v-nobuild
 	SHLIBSEXT=.so.s-nobuild
 else
-	AC_MSG_NOTICE([using shared libraries])
+	AC_MSG_NOTICE([[using shared libraries]])
 
 	# Clear some stuff in case of AIX, etc.
 	if test "$STLIBEXT" = "$SHLIBEXT" ; then
@@ -1197,7 +1201,7 @@ CC_LINK="$CC_LINK_SHARED"
 CXX_LINK="$CXX_LINK_SHARED"
 
 if test -z "$LIBLIST"; then
-	AC_MSG_ERROR([must enable one of shared or static libraries])
+	AC_MSG_ERROR([[must enable one of shared or static libraries]])
 fi
 
 # Check whether to build profiled libraries.
@@ -1205,7 +1209,7 @@ AC_ARG_ENABLE([profiled],
 dnl [  --enable-profiled       build profiled libraries @<:@disabled@:>@]
 ,
 [if test "$enableval" = yes; then
-  AC_MSG_ERROR([Sorry, profiled libraries do not work in this release.])
+  AC_MSG_ERROR([[Sorry, profiled libraries do not work in this release.]])
 fi])])
 
 dnl
@@ -1216,7 +1220,7 @@ dnl Determine parameters related to libraries, e.g. various extensions.
 AC_DEFUN(KRB5_LIB_PARAMS,
 [AC_REQUIRE([AC_CANONICAL_HOST])dnl
 krb5_cv_host=$host
-AC_SUBST(krb5_cv_host)
+AC_SUBST([krb5_cv_host])
 AC_REQUIRE([AC_PROG_CC])dnl
 AC_REQUIRE([V5_SET_TOPDIR])dnl
 . $ac_topdir/config/shlib.conf])
@@ -1287,7 +1291,7 @@ ns_initparse ns_name_uncompress dn_skipname res_search)
       && test $krb5_cv_func_res_search = no; then
 	# Attempt to link with res_search(), in case it's not prototyped.
 	AC_CHECK_FUNC(res_search,
-	  [AC_DEFINE(HAVE_RES_SEARCH, 1,
+	  [AC_DEFINE([[HAVE_RES_SEARCH]], 1,
 	    [Define to 1 if you have the `res_search' function])],
 	  [AC_ERROR([cannot find res_nsearch or res_search])])
     fi
@@ -1331,10 +1335,10 @@ enable_dns=yes
 [  --enable-dns-for-realm  enable DNS lookups of Kerberos realm names], ,
 [enable_dns_for_realm=no])
   if test "$enable_dns_for_realm" = yes; then
-    AC_DEFINE(KRB5_DNS_LOOKUP_REALM,1,[Define to enable DNS lookups of Kerberos realm names])
+    AC_DEFINE([[KRB5_DNS_LOOKUP_REALM]],1,[Define to enable DNS lookups of Kerberos realm names])
   fi
 
-AC_DEFINE(KRB5_DNS_LOOKUP, 1,[Define for DNS support of locating realms and KDCs])
+AC_DEFINE([[KRB5_DNS_LOOKUP]], 1,[Define for DNS support of locating realms and KDCs])
 
 ])
 dnl
@@ -1359,7 +1363,7 @@ $2(&xx);
 ],
 krb5_cv_func_$2_noproto=yes,krb5_cv_func_$2_noproto=no))
 if test $krb5_cv_func_$2_noproto = yes; then
-	AC_DEFINE([NEED_]translit($2, [a-z], [A-Z])[_PROTO], 1, dnl
+	AC_DEFINE([[NEED_]]translit($2, [a-z], [A-Z])[_PROTO], 1, dnl
 [define if the system header files are missing prototype for $2()])
 fi
 ifelse([$3], ,[fi])
@@ -1369,7 +1373,7 @@ dnl =============================================================
 dnl Internal function for testing for getpeername prototype
 dnl
 AC_DEFUN([KRB5_GETPEERNAME_ARGS],[
-AC_DEFINE([GETPEERNAME_ARG3_TYPE],GETSOCKNAME_ARG3_TYPE,[Type of getpeername second argument.])
+AC_DEFINE([[GETPEERNAME_ARG3_TYPE]],GETSOCKNAME_ARG3_TYPE,[Type of getpeername second argument.])
 ])
 dnl
 dnl =============================================================
@@ -1407,7 +1411,7 @@ do
   done 
 done
 if test "$sock_set" = no; then
-  AC_MSG_NOTICE(assuming struct sockaddr and socklen_t for getsockname args)
+  AC_MSG_NOTICE([[assuming struct sockaddr and socklen_t for getsockname args]])
   res1="struct sockaddr *"
   res2="socklen_t *"
 fi
@@ -1438,8 +1442,8 @@ if test $COM_ERR_VERSION = sys; then
   fi
   LIBS="$LIBS $COM_ERR_LIB"
   # check for various functions we need
-  AC_CHECK_LIB(com_err, add_error_table, :, AC_MSG_ERROR(cannot find add_error_table in com_err library))
-  AC_CHECK_LIB(com_err, remove_error_table, :, AC_MSG_ERROR(cannot find remove_error_table in com_err library))
+  AC_CHECK_LIB(com_err, add_error_table, :, AC_MSG_ERROR([[cannot find add_error_table in com_err library]]))
+  AC_CHECK_LIB(com_err, remove_error_table, :, AC_MSG_ERROR([[cannot find remove_error_table in com_err library]]))
   # make sure compile_et provides "et_foo" name
   cat >> conf$$e.et <<EOF
 error_table foo
@@ -1448,15 +1452,15 @@ end
 EOF
   AC_CHECK_PROGS(compile_et,compile_et,false)
   if test "$compile_et" = false; then
-    AC_MSG_ERROR(cannot find compile_et)
+    AC_MSG_ERROR([[cannot find compile_et]])
   fi
   AC_CACHE_CHECK(whether compile_et is useful,krb5_cv_compile_et_useful,[
   if compile_et conf$$e.et >/dev/null 2>&1 ; then true ; else
-    AC_MSG_ERROR(execution failed)
+    AC_MSG_ERROR([[execution failed]])
   fi
   AC_TRY_COMPILE([#include "conf$$e.h"
       		 ],[ &et_foo_error_table; ],:,
-		 [AC_MSG_ERROR(cannot use et_foo_error_table)])
+		 [AC_MSG_ERROR([[cannot use et_foo_error_table]])])
   # Anything else we need to test for?
   rm -f conf$$e.c conf$$e.h
   krb5_cv_compile_et_useful=yes
@@ -1476,11 +1480,11 @@ EOF
   fi
   rm -f conf$$e.et
 fi
-AC_SUBST(COM_ERR_VERSION)
-AC_SUBST(COM_ERR_LIB)
+AC_SUBST([COM_ERR_VERSION])
+AC_SUBST([COM_ERR_LIB])
 LIBS="$OLDLIBS"
 if test "$COM_ERR_VERSION" = k5 -o "$COM_ERR_VERSION" = intlsys; then
-  AC_DEFINE(HAVE_COM_ERR_INTL,1,
+  AC_DEFINE([[HAVE_COM_ERR_INTL]],1,
             [Define if com_err has compatible gettext support])
 fi
 ])
@@ -1507,7 +1511,7 @@ int main(int argc, char *argv[]) {
     ss_listen(i);
   }
   return 0;
-}], krb5_cv_system_ss_okay=yes, AC_MSG_ERROR(cannot run test program),
+}], krb5_cv_system_ss_okay=yes, AC_MSG_ERROR([[cannot run test program]]),
   krb5_cv_system_ss_okay="assumed")])
   LIBS="$old_LIBS"
   KRB5_NEED_PROTO([#include <ss/ss.h>],ss_execute_command,1)
@@ -1515,8 +1519,8 @@ else
   SS_VERSION=k5
   AC_MSG_RESULT(krb5)
 fi
-AC_SUBST(SS_LIB)
-AC_SUBST(SS_VERSION)
+AC_SUBST([SS_LIB])
+AC_SUBST([SS_VERSION])
 ])
 dnl
 AC_DEFUN([KRB5_AC_CHOOSE_DB],[
@@ -1543,7 +1547,7 @@ if test "x$with_system_db" = xyes ; then
   KDB5_DB_LIB="$DB_LIB"
 else
   DB_VERSION=k5
-  AC_DEFINE(HAVE_BT_RSEQ,1,[Define if bt_rseq is available, for recursive btree traversal.])
+  AC_DEFINE([[HAVE_BT_RSEQ]],1,[Define if bt_rseq is available, for recursive btree traversal.])
   DB_HEADER=db.h
   DB_HEADER_VERSION=k5
   # libdb gets sucked into libkdb
@@ -1551,11 +1555,11 @@ else
   # needed for a couple of things that need libdb for its own sake
   DB_LIB=-ldb
 fi
-AC_SUBST(DB_VERSION)
-AC_SUBST(DB_HEADER)
-AC_SUBST(DB_HEADER_VERSION)
-AC_SUBST(DB_LIB)
-AC_SUBST(KDB5_DB_LIB)
+AC_SUBST([DB_VERSION])
+AC_SUBST([DB_HEADER])
+AC_SUBST([DB_HEADER_VERSION])
+AC_SUBST([DB_LIB])
+AC_SUBST([KDB5_DB_LIB])
 ])
 dnl
 dnl KRB5_AC_PRIOCNTL_HACK
@@ -1593,7 +1597,7 @@ if test "$krb5_cv_priocntl_hack" = yes; then
 else
 	PRIOCNTL_HACK=0
 fi
-AC_SUBST(PRIOCNTL_HACK)])
+AC_SUBST([PRIOCNTL_HACK])])
 dnl
 dnl
 dnl KRB5_AC_GCC_ATTRS
@@ -1601,12 +1605,12 @@ AC_DEFUN([KRB5_AC_GCC_ATTRS],
 [AC_CACHE_CHECK([for constructor/destructor attribute support],krb5_cv_attr_constructor_destructor,
 [rm -f conftest.1 conftest.2
 if test -r conftest.1 || test -r conftest.2 ; then
-  AC_MSG_ERROR(write error in local file system?)
+  AC_MSG_ERROR([[write error in local file system?]])
 fi
 true > conftest.1
 true > conftest.2
 if test -r conftest.1 && test -r conftest.2 ; then true ; else
-  AC_MSG_ERROR(write error in local file system?)
+  AC_MSG_ERROR([[write error in local file system?]])
 fi
 a=no
 b=no
@@ -1618,7 +1622,7 @@ void foo2() __attribute__((destructor));
 void foo2() { unlink("conftest.2"); }
 int main () { return 0; }],
 [test -r conftest.1 || a=yes
-test -r conftest.2 || b=yes], , AC_MSG_ERROR(Cannot test for constructor/destructor support when cross compiling))
+test -r conftest.2 || b=yes], , AC_MSG_ERROR([[Cannot test for constructor/destructor support when cross compiling]]))
 case $krb5_cv_host in
 *-*-aix4.*)
 	# Under AIX 4.3.3, at least, shared library destructor functions
@@ -1637,11 +1641,11 @@ krb5_cv_attr_constructor_destructor="$a,$b"
 # Okay, krb5_cv_... should be set now.
 case $krb5_cv_attr_constructor_destructor in
   yes,*)
-    AC_DEFINE(CONSTRUCTOR_ATTR_WORKS,1,[Define if __attribute__((constructor)) works]) ;;
+    AC_DEFINE([[CONSTRUCTOR_ATTR_WORKS]],1,[Define if __attribute__((constructor)) works]) ;;
 esac
 case $krb5_cv_attr_constructor_destructor in
   *,yes)
-    AC_DEFINE(DESTRUCTOR_ATTR_WORKS,1,[Define if __attribute__((destructor)) works]) ;;
+    AC_DEFINE([[DESTRUCTOR_ATTR_WORKS]],1,[Define if __attribute__((destructor)) works]) ;;
 esac
 dnl End of attributes we care about right now.
 ])
@@ -1655,7 +1659,7 @@ krb5_cv_pragma_weak_ref,
 extern int flurbl(void);],[if (&flurbl != 0) return flurbl();],
 krb5_cv_pragma_weak_ref=yes,krb5_cv_pragma_weak_ref=no)])
 if test $krb5_cv_pragma_weak_ref = yes ; then
-  AC_DEFINE(HAVE_PRAGMA_WEAK_REF,1,[Define if #pragma weak references work])
+  AC_DEFINE([[HAVE_PRAGMA_WEAK_REF]],1,[Define if #pragma weak references work])
 fi])
 dnl
 dnl
@@ -1673,11 +1677,11 @@ AC_ARG_WITH([ldap],
 [case "$withval" in
     OPENLDAP) with_ldap=yes ;;
     yes | no) ;;
-    *)  AC_MSG_ERROR(Invalid option value --with-ldap="$withval") ;;
+    *)  AC_MSG_ERROR([[Invalid option value --with-ldap="$withval"]]) ;;
 esac], with_ldap=no)dnl
 
 if test "$with_ldap" = yes; then
-  AC_MSG_NOTICE(enabling OpenLDAP database backend module support)
+  AC_MSG_NOTICE([[enabling OpenLDAP database backend module support]])
   OPENLDAP_PLUGIN=yes
 fi
 ])dnl

@@ -34,7 +34,7 @@ BEGIN
 -- needed to do the Right Thing with pepsy; this isn't a valid ASN.1
 -- token, however.
 
-SECTIONS encode decode none
+-- SECTIONS encode decode none
 
 -- the order of stuff in this file matches the order in the draft RFC
 
@@ -434,3 +434,4 @@ PA-ENC-SAM-RESPONSE-ENC-2 ::= SEQUENCE {
      ...
 }
 END
+-- vim: set ft=asn ff=unix fenc=UTF-8 eol sw=4 ts=4 sts=4 et:

@@ -240,10 +240,10 @@ CC="$old_CC"
 CFLAGS="$old_CFLAGS"
 ]])
 
-dnl This is somewhat gross and should go away when the build system
-dnl is revamped. -- tlyu
-dnl DECLARE_SYS_ERRLIST - check for sys_errlist in libc
-dnl
+# This is somewhat gross and should go away when the build system
+# is revamped. -- tlyu
+# DECLARE_SYS_ERRLIST - check for sys_errlist in libc
+#
 AC_DEFUN([DECLARE_SYS_ERRLIST],
 [AC_CACHE_CHECK([[for sys_errlist declaration]], [[krb5_cv_decl_sys_errlist]],
 [AC_TRY_COMPILE([#include <stdio.h>
@@ -268,9 +268,9 @@ AC_DEFUN([DECLARE_SYS_ERRLIST],
   fi
 fi]])
 
-dnl
-dnl check for sigmask/sigprocmask -- CHECK_SIGPROCMASK
-dnl
+#
+# check for sigmask/sigprocmask -- CHECK_SIGPROCMASK
+#
 AC_DEFUN([CHECK_SIGPROCMASK],[
 AC_MSG_CHECKING([[for use of sigprocmask]])
 AC_CACHE_VAL([[krb5_cv_func_sigprocmask_use]],
@@ -282,12 +282,12 @@ AC_MSG_RESULT([[$krb5_cv_func_sigprocmask_use]])[
 if test $krb5_cv_func_sigprocmask_use = yes; then
  ]AC_DEFINE([[USE_SIGPROCMASK]],1,[[Define if sigprocmask should be used]])[
 fi
-]])dnl
-dnl
-dnl
-dnl check for <dirent.h> -- CHECK_DIRENT
-dnl (may need to be more complex later)
-dnl
+]])
+
+#
+# check for <dirent.h> -- CHECK_DIRENT
+# (may need to be more complex later)
+#
 AC_DEFUN([CHECK_DIRENT],[
 AC_CHECK_HEADER(dirent.h,AC_DEFINE([[USE_DIRENT_H]],1,[Define if you have dirent.h functionality]))])dnl
 dnl

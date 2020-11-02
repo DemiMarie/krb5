@@ -289,7 +289,7 @@ fi
 # (may need to be more complex later)
 #
 AC_DEFUN([CHECK_DIRENT],[
-AC_CHECK_HEADER(dirent.h,AC_DEFINE([[USE_DIRENT_H]],1,[Define if you have dirent.h functionality]))])dnl
+AC_CHECK_HEADER([[dirent.h]],AC_DEFINE([[USE_DIRENT_H]],1,[Define if you have dirent.h functionality]))])dnl
 dnl
 dnl check if union wait is defined, or if WAIT_USES_INT -- CHECK_WAIT_TYPE
 dnl
